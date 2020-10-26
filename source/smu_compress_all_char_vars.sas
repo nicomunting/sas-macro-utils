@@ -1,23 +1,30 @@
 /**
 	\file       smu_compress_all_char_vars.sas
 
+	\brief      Compress all characters variables in a data set
+	\details
+	Apply the compress function to all character variables in a data set. This can
+	be useful to: 
+	- remove all non-printing characters from a data set as this can lead to weird
+	  behaviour.
+	- be sure that a delimiter character does not exist in the data before exporting
+	  to a delimited file. 
+
 	\author     Nico Munting
 	\date       2018
 	\copyright  MIT License
 	\version    SAS 9.3
 
-	\brief      Compress all characters variables in a dataset
-	\details
-	???
-	        
 	\param[in]  input_ds  Input data set
-	\param[out] output_ds  Output data set (view) 
+	\param[out] output_ds  Output data view 
 	\param[in]  compress_chars  [Optional] Characters to compress (2nd argument 
 	            of compress function)
 	\param[in]  compress_modifiers  Modifiers for compress function (3rd argument
 	            of compress function). Default is to compress all non-printing characters
 	            using ``'c'`` as the compress modifier.
-	                       
+	
+	\todo Gracefully handle data sets without character variables. 
+
 */ /** \cond */ 
 
 %macro smu_compress_all_char_vars(

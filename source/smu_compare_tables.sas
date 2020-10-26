@@ -1,14 +1,8 @@
 /**
 	\file       smu_compare_tables.sas
 
-	\author     Nico Munting
-	\date       2019 - 2020
-	\copyright  MIT License
-	\version    SAS 9.4
-
 	\brief      Compare two tables based on PROC COMPARE
 	\details    
-	
 	Macro to make the use of PROC COMPARE easier. 
 	- Sorting of the base and compare data sets on the ID variables
 	  is taken care of. 
@@ -20,6 +14,11 @@
 	  a glance. 
 	See https://github.com/nicomunting/sas-macro-utils for more detailed 
 	examples. 
+
+	\author     Nico Munting
+	\date       2019 - 2020
+	\copyright  MIT License
+	\version    SAS 9.4
 
 	\param[in]  base_ds  Base data set for PROC COMPARE
 	\param[in]  compare_ds  Compare data set for PROC COMPARE
