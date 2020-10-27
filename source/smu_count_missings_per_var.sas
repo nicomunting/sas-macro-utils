@@ -1,7 +1,7 @@
 /**
 	\file       smu_count_missings_per_var.sas
 
-	\brief      Count number of missing for each column or variable. 
+	\brief      Count number of missing values for each column or variable. 
 	\details
 	Macro to count the number of missing records for each variable or column in 
 	an input data set. 
