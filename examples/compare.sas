@@ -10,7 +10,7 @@ data work.airline;
 	format DATE DATE9. Region $3.; 
 run;
 
-data work.cars / view=work.cars; 
+data work.cars; 
 	length Make $15.; 
 	set sashelp.cars end=last; 
 	drop Invoice; 
@@ -42,21 +42,16 @@ quit;
 
 /** Execute comparisons **/
 
-title "Compare Airlines"; 
 %smu_compare_tables(
 	base_ds=sashelp.airline, compare_ds=work.airline, 
 	prefix=air, id_vars=DATE, 
 	summary_ds=&result_ds.
 );
-title; 
-
-title "Compare Cars"; 
 %smu_compare_tables(
 	base_ds=sashelp.cars, compare_ds=work.cars, 
-	prefix=cars, id_vars=Make Model Type Origin DriveTrain, 
+	prefix=cars, id_vars=Make Model Type DriveTrain Origin, 
 	summary_ds=&result_ds.
 );
-title; 
 
 
 /** Define format for color coding and print summary **/ 
