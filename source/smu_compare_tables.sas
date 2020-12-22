@@ -47,35 +47,72 @@
 	summary_ds= /* Optional */ 
 );
 
-	title "Compare of %upcase(&base_ds.) with %upcase(&compare_ds.)"; 
+	%local base_sort_order comp_sort_order base_sorted comp_sorted; 
+
+	/** Determine if sorting is required **/
 
 	%if "&id_vars." ne "" %then %do; 
-		proc sort data=&base_ds.(drop=&exclude_vars.) out=work.&prefix._before; 
-			by &id_vars.; 
-		proc sort data=&compare_ds.(drop=&exclude_vars.) out=work.&prefix._after; 
-			by &id_vars.; 
-	%end; 
+
+		proc contents data=&base_ds. out=work.smu_base_contents noprint; 
+		proc contents data=&compare_ds. out=work.smu_comp_contents noprint; 
+		run;
+
+		proc sql noprint;
+			select NAME into :base_sort_order separated by ' '
+				from work.smu_base_contents
+				where SORTEDBY is not null
+				order by SORTEDBY
+			; 
+			select NAME into :comp_sort_order separated by ' ' 
+				from work.smu_comp_contents
+				where SORTEDBY is not null
+				order by SORTEDBY
+			; 
+		quit;
+
+		%let base_sorted = %eval(%symexist(base_sort_order) and "%left(%trim(%lowcase(&id_vars.)))" eq "%left(%trim(%lowcase(&base_sort_order.)))");
+		%let comp_sorted = %eval(%symexist(comp_sort_order) and "%left(%trim(%lowcase(&id_vars.)))" eq "%left(%trim(%lowcase(&comp_sort_order.)))");
+	%end;
 	%else %do; 
-		data work.&prefix._before; 
-			set &base_ds.(drop=&exclude_vars.); 
-		data work.&prefix._after; 
-			set &compare_ds.(drop=&exclude_vars.); 
+		%let base_sorted = 1; 
+		%let comp_sorted = 1;
 	%end; 
+
+	%if not &base_sorted. %then %do; 
+		proc sort data=&base_ds. out=work.&prefix._before; 
+			by &id_vars.; 
+		run; 
+	%end; 
+	%if not &comp_sorted. %then %do; 
+		proc sort data=&compare_ds. out=work.&prefix._after; 
+			by &id_vars.; 
+		run;
+	%end; 
+
+
+	/** Execute comparison **/
+ 
+	title "Compare of %upcase(&base_ds.) with %upcase(&compare_ds.)"; 
 	proc compare 
-		base=work.&prefix._before compare=work.&prefix._after 
+		%if not &base_sorted. %then base=work.&prefix._before(drop=&exclude_vars.); 
+		%else base=&base_ds.(drop=&exclude_vars.);
+		%if not &comp_sorted. %then compare=work.&prefix._after(drop=&exclude_vars.); 
+		%else compare=&compare_ds.(drop=&exclude_vars.);
 		out=&prefix._diff &out_options.
 		listvar
 		&compare_options.
 	; 
-		id &id_vars.; 
+		%if "&id_vars." ne "" %then id &id_vars.; ;
 	run; 
-
 	title; 
+
+
+	/** Populate summary table if requested **/
 
 	%if "&summary_ds." ne "" %then %do; 
 		%let comp_sysinfo = &sysinfo.; 
 
-		data work.summary_new; 
+		data work.smu_summary_new; 
 			attrib
 				base_ds length=$41 label='Base data set' 
 				compare_ds length=$41 label='Compare data set'
@@ -110,8 +147,10 @@
 			  See SAS 9.4 PROC COMPARE documentation about the details of the return codes: 
 			  https://documentation.sas.com/?docsetId=proc&docsetVersion=9.4&docsetTarget=n1jbbrf1tztya8n1tju77t35dej9.htm&locale=nl
 			;
-			DSLABEL = substr(reverse(binary_sysinfo), 1, 1);
-			DSTYPE = substr(reverse(binary_sysinfo), 2, 1);
+			%if "&id_vars." eq "" or (&base_sorted. and &comp_sorted.) %then %do;
+				DSLABEL = substr(reverse(binary_sysinfo), 1, 1); 
+				DSTYPE = substr(reverse(binary_sysinfo), 2, 1);
+			%end; 
 			INFORMAT = substr(reverse(binary_sysinfo), 3, 1);
 			FORMAT = substr(reverse(binary_sysinfo), 4, 1);
 			LENGTH = substr(reverse(binary_sysinfo), 5, 1);
@@ -128,11 +167,11 @@
 			ERROR = substr(reverse(binary_sysinfo), 16, 1);
 		run; 
 
-		proc append base=work.&summary_ds. data=work.summary_new; 
+		proc append base=work.&summary_ds. data=work.smu_summary_new; 
 		run;
 
 		proc datasets lib=work nodetails nolist nowarn; 
-			delete summary_new; 
+			delete smu_summary_new smu_base_contents smu_comp_contents; 
 		quit; 
 	%end; 
 
