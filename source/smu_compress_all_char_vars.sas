@@ -34,13 +34,13 @@
 	compress_modifiers='c' 
 ); 
 
-	/* Compress all characters variables */
+	%* Compress all characters variables. ;
 	data &output_ds.(drop=i) / view=&output_ds.; 
 		set &input_ds.; 
 
 		array char_vars _CHARACTER_; 
 
-		* Loop through character variables and execute compress function for each one.  ;
+		%* Loop through character variables and execute compress function for each one.  ;
 		do i=1 to dim(char_vars); 
 			char_vars[i] = compress(char_vars[i], &compress_chars., &compress_modifiers.);
 		end; 
