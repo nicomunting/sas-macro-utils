@@ -3,7 +3,7 @@ A collection of handy SAS utility macros to accomplish some specific tasks.
 
 ## Compressing all character variables in a data set (`smu_compress_all_char_vars`)
 Sometimes it can be convenient to remove certain characters in a character variable. For example, to get rid of some weird non-printing characters that SAS creates [when importing Excel-files](https://communities.sas.com/t5/SAS-Procedures/proc-import-XLSX-file-different-results-on-Linux-vs-Windows/m-p/388613). Or to get rid of a character that will be used as a delimiter before exporting to a delimited file (although arguably it is better to enclose these values in double quotes). 
-In short, do anything that you can do with the compress-function at once to all variables in a data set.
+In short, do anything that you can do with the compress-function at once to all character variables in a data set.
 
 ## Comparing one or more data sets for differences (`smu_compare_tables`)
 PROC COMPARE is a very powerful procedure to compare different data sets. However, it requires a lot of code to get basic things done. This macro uses the power of PROC COMPARE, but makes sure that the data sets are sorted properly, gives useful output by default (ODS and data sets) and makes it easy to summarize the results of comparing multiple data sets at once. 
