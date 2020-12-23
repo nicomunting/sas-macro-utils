@@ -13,7 +13,7 @@
 	https://lexjansen.com/nesug/nesug93/NESUG93033.pdf
 	
 	\author     Nico Munting
-	\date       2018
+	\date       2018 - 2020
 	\copyright  MIT License
 	\version    SAS 9.3
 	        
@@ -62,7 +62,7 @@
 			dsid = open("&input_ds."); 
 
 			%if &n_num_vars. > 0 %then %do;
-				* Loop over all numeric vars and count the missings. ; 
+				%* Loop over all numeric vars and count the missings. ; 
 				do num_iter = 1 to dim(num_vars);
 					num_var_nm = vname(num_vars[num_iter]); 
 					num_var_no = varnum(dsid, num_var_nm); 
@@ -70,7 +70,7 @@
 				end;
 			%end;
 			%if &n_char_vars. > 0 %then %do;
-				* Loop over all character vars and count the missings. ; 
+				%* Loop over all character vars and count the missings. ; 
 				do char_iter = 1 to dim(char_vars);
 					char_var_nm = vname(char_vars[char_iter]); 
 					char_var_no = varnum(dsid, char_var_nm); 
@@ -80,7 +80,7 @@
 
 			rc = close(dsid); 
 
-			* Get total observations using observation number instead of nobs-option 
+			%* Get total observations using observation number instead of nobs-option 
 			  on set-statement as the latter does not work with views. ; 
 			totobs = _n_; 
 
@@ -95,6 +95,7 @@
 
 		%end; 
 		%else %do; 
+			%* In case there are no variables to check, output empty data set. ;
 			if 0 then set ds_contents;
 			length MISSING_NO NON_MISSING_NO MISSING_PCT 8.;
 			stop;
