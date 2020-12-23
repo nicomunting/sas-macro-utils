@@ -13,7 +13,8 @@ The summary data set created can be printed to see at a glance what type of diff
 ![summary output](examples/compare_summary.png)
 
 ## Dropping empty variables from a data set (`smu_drop_empty_vars`)
-Easily determine for a data set which variables only have missing values and get rid of them. 
+Easily determine for a data set which variables only have missing values and get rid of them. This macro relies on `smu_count_missings_per_var` to determine empty variables. 
 
 ## Counting missing for numeric and character variables (`smu_count_missings_per_var`)
-PROC FREQ can be used to determine missing values for variables in a data set, but if you are purely interested in that it can be a bit cumbersome. This macro will output the count of missing and non-missing values for each variable in the input data set. 
+PROC FREQ can be used to determine missing values for variables in a data set, but if you are purely interested in that it can be a bit cumbersome. This macro will output the count of missing and non-missing values for numeric and character variables in the input data set. 
+This macro is based on the idea presented in [Calculating Missing Value Counts - Loren Lidsky (NESUG 1993 Proceedings)](https://lexjansen.com/nesug/nesug93/NESUG93033.pdf).

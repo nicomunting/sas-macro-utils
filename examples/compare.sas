@@ -72,7 +72,7 @@ run;
 /* Print summary output created by smu_compare_tables based on output codes 
    from proc compare */
 proc print data=&result_ds. noobs label; 
-	id base_ds; 
+	id base_ds compare_ds; 
 	variables DSLABEL DSTYPE INFORMAT FORMAT LABEL / style={background=green.};
 	variables LENGTH BASEVAR COMPVAR / style={background=orange.};
 	variables BASEOBS COMPOBS BASEBY COMPBY VALUE TYPE BYVAR ERROR / style={background=red.};
