@@ -22,6 +22,8 @@
 	\param[in]  compress_modifiers  Modifiers for compress function (3rd argument
 	            of compress function). Default is to compress all non-printing characters
 	            using ``'c'`` as the compress modifier.
+	\param[out] create_view  [Optional] Creates the output data set as a view. 
+		YES or NO (default).
 	
 	\todo Gracefully handle data sets without character variables. 
 
@@ -31,11 +33,12 @@
 	input_ds=, 
 	output_ds=,
 	compress_chars=, 
-	compress_modifiers='c' 
+	compress_modifiers='c',
+	create_view=NO 
 ); 
 
 	%* Compress all characters variables. ;
-	data &output_ds.(drop=i) / view=&output_ds.; 
+	data &output_ds.(drop=i) %if "&create_view." = "YES" %then / view=&output_ds.; ;
 		set &input_ds.; 
 
 		array char_vars _CHARACTER_; 

@@ -19,10 +19,12 @@
 	\param[in]  input_ds  Input data set
 	\param[out] output_ds  Output data view that no longer contains the variables 
 	            that only have missing values. 
+	\param[out] create_view  [Optional] Creates the output data set as a view. 
+		YES or NO (default).
 
 */ /** \cond */ 
 
-%macro smu_drop_empty_vars(input_ds=, output_ds=); 
+%macro smu_drop_empty_vars(input_ds=, output_ds=, create_view=NO); 
 
 	%smu_count_missings_per_var(input_ds=&input_ds., output_ds=work.input_missing); 
 
@@ -33,7 +35,7 @@
 		; 
 	quit; 
 
-	data &output_ds. / view=&output_ds.; 
+	data &output_ds. %if "&create_view." = "YES" %then / view=&output_ds.; ;
 		set &input_ds.; 
 		keep &non_empty_vars.; 
 	run; 
