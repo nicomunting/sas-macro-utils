@@ -170,10 +170,11 @@
 		proc append base=work.&summary_ds. data=work.smu_summary_new; 
 		run;
 
-		proc datasets lib=work nodetails nolist nowarn; 
-			delete smu_summary_new smu_base_contents smu_comp_contents; 
-		quit; 
 	%end; 
+
+	proc datasets lib=work nodetails nolist nowarn; 
+		delete smu_summary_new smu_base_contents smu_comp_contents; 
+	quit; 
 
 %mend smu_compare_tables; 
 
