@@ -38,14 +38,15 @@
 ); 
 
 	%* Compress all characters variables. ;
-	data &output_ds.(drop=i) %if "&create_view." = "YES" %then / view=&output_ds.; ;
+	data &output_ds. %if "&create_view." = "YES" %then / view=&output_ds.; ;
 		set &input_ds.; 
 
 		array char_vars _CHARACTER_; 
 
-		%* Loop through character variables and execute compress function for each one.  ;
-		do i=1 to dim(char_vars); 
-			char_vars[i] = compress(char_vars[i], &compress_chars., &compress_modifiers.);
+		%* Loop through character variables and execute compress function for each one.  
+		   'Abuse' _N_ as iterator to avoid clashes with variables names in data set.;
+		do _n_=1 to dim(char_vars); 
+			char_vars[_n_] = compress(char_vars[_n_], &compress_chars., &compress_modifiers.);
 		end; 
 	run; 
 
